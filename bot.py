@@ -77,7 +77,12 @@ def parse_when(text: str):
         else:
             m = DATE_NUM.search(t)
             if m:
-                mon, day, yr = int(m.group(1)), int(m.group(2)), m.group(3)
+                first, second, yr = int(m.group(1)), int(m.group(2)), m.group(3)
+                padded = m.group(1).startswith("0")
+                if second <= 12 and (first > 12 or padded):
+                    day, mon = first, second
+                else:
+                    mon, day = first, second
     if m:
         year = int(yr) if yr else None
         if year is not None and year < 100:
@@ -252,7 +257,7 @@ TEMP_LINES = [
         "jacket optional",
         "its gonna be {when} what you would call pleasant",
         "honestly kind of perfect. dont tell anyone",
-    ], ["mild", "nice", "fine", "normal", "pleasant", "okay"]),
+    ], ["mild", "nice", "fine", "normal", "pleasant", "it's okay"]),
     (80, [
         "its gonna be warm {when} bro",
         "warm. like t-shirt warm",
@@ -327,22 +332,22 @@ SKY_COMMENTS = {
 }
 
 WIND_COMMENTS = [
-    "also its windy", "wind. there will be wind", "also, hold onto your hat", "oh and your hair is gonna hate it",
+    "also its windy", "and wind. there will be wind", "also, hold onto your hat", "oh and your hair is gonna hate it",
     "also kinda breezy. like a lot", "and windy. everything is gonna blow around",
     "plus wind. sorry in advance",
 ]
 
 SWING_COMMENTS = [
-    "also big difference between day and night", "its gonna change a lot during the day tho",
-    "morning and night are gonna be different weather too",
+    "also big difference between day and night", "and its gonna change a lot during the day tho",
+    "also, morning and night are gonna be different weather too",
     "also bring a jacket for later. the temperature is gonna drop",
     "also its gonna feel like two different days between day and night",
 ]
 
 RAIN_CHANCE_COMMENTS = [
-    "maybe rain? maybe not", "might rain. might not. who knows. not me thats for sure",
-    "bring an umbrella just in case i guess", "also like. a chance of rain. idk how big just take a guess",
-    "theres a rain chance too so uhh. be ready",
+    "and maybe rain? maybe not", "and it might rain. might not. who knows. not me thats for sure",
+    "also, bring an umbrella just in case i guess", "also like. there's a chance of rain. idk how big just take a guess",
+    "plus theres a chance of rain too so uhh. be ready",
 ]
 
 PREFIXES = ["uhh ", "um ", "okay so ", "hold on. ", "lemme check. ", "hmm ", "okay so ",
@@ -373,7 +378,7 @@ NOT_A_PLACE = [
     "uhhh where is that. i looked and its not on the map",
     "i dont think that exists",
     "did you make that up",
-    "bro i checked. nothing. nada",
+    "bro i checked. nothing",
     "that sounds like a fake place",
     "never heard of it. sorry. not sorry",
     "can you spell that for me. i dont think thats a place",
@@ -381,7 +386,7 @@ NOT_A_PLACE = [
     "are you sure thats a real place",
     "thats not a place thats a vibe",
     "i looked everywhere. zero results",
-    "what is that. a band?",
+    "what is that",
 ]
 
 NO_LOCATION = [
@@ -494,7 +499,8 @@ THANKS_WORDS = {"thanks", "thank", "you", "thx", "ty", "tysm", "thankyou", "ok",
                 "amazing", "best"}
 INSULT_WORDS = {"wrong", "useless", "stupid", "dumb", "bad", "trash", "terrible",
                 "worst", "you", "are", "so", "this", "is", "bot", "girl", "a", "the",
-                "weathergirl", "youre", "you're", "u", "r", "lame", "mid", "awful"}
+                "weathergirl", "youre", "you're", "u", "r", "lame", "mid", "awful", 
+                "hate", "die", "annoying"}
 HELP_PHRASES = {"help", "what can you do", "who are you", "how do you work",
                 "what do you do", "commands", "how does this work", "what are you"}
 
@@ -609,8 +615,8 @@ def vague_answer(wx: dict, when: str) -> str:
 def real_forecast(place: dict, wx: dict, when: str) -> str:
     sky = sky_type(wx["code"])
     name = place["name"]
-    return (f"...ok fine. {when} in {name}: high of {round(wx['high'])}°F, "
-            f"low of {round(wx['low'])}°F, {wx['rain_chance']}% chance of precipitation, "
+    return (f"...okay fine. {when} in {name}: high of {round(wx['high'])}°f, "
+            f"low of {round(wx['low'])}°f, {wx['rain_chance']}% chance of precipitation, "
             f"winds up to {round(wx['wind'])} mph, {sky}. happy now?")
 
 
