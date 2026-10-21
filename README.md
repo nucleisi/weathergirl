@@ -1,5 +1,5 @@
 # weathergirl
-> a discord bot that tells you the weather. really badly.
+> a discord bot that technically tells you the weather sometimes
 
 ask her about the weather somewhere and she'll say something like "uhhh... cold probably. idk". she checks the real forecast first, so she won't say it's freezing somewhere that's actually hot. about 10% of the time she gives you the real forecast, but she's maybe a bit upset about it.
 
